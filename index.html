@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inventory Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="asset/icon.png" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Inventory Matrix</h1>
+        <nav>
+          <a href="index.html" class="active">Dashboard</a>
+          <a href="view-products.html">View Products</a>
+          <a href="add-products.html">Add Products</a>
+        </nav>
+      </header>
+
+      <h2>System Overview</h2>
+
+      <div class="dashboard-grid">
+        <div class="card accent">
+          <h3>Unique Products</h3>
+          <p id="totalProducts">0</p>
+          <a href="view-products.html" class="btn-link">View Database</a>
+        </div>
+        <div class="card secondary">
+          <h3>Total Stock Volume</h3>
+          <p id="totalQty">0</p>
+          <a href="add-products.html" class="btn-link">+ Intake Stock</a>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
