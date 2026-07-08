@@ -42,6 +42,25 @@ const bulkTemplateBody = document.getElementById("bulkTemplateBody");
 const bulkForm = document.getElementById("bulkForm");
 const btnAddRow = document.getElementById("btnAddRow");
 
+// Price Calculator specific DOM pointers
+const productSelect = document.getElementById("productSelect");
+const inputBasePrice = document.getElementById("inputBasePrice");
+const itemSpecsBadge = document.getElementById("itemSpecsBadge");
+const chkXtra = document.getElementById("chkXtra");
+const chkGratisOngkir = document.getElementById("chkGratisOngkir");
+const inputPacking = document.getElementById("inputPacking");
+const inputProfit = document.getElementById("inputProfit");
+
+const lblGrossPrice = document.getElementById("lblGrossPrice");
+const lblPackingCost = document.getElementById("lblPackingCost");
+const lblProfitTarget = document.getElementById("lblProfitTarget");
+const lblNetCost = document.getElementById("lblNetCost");
+const lblAdminFee = document.getElementById("lblAdminFee");
+const lblXtraFee = document.getElementById("lblXtraFee");
+const lblShippingFee = document.getElementById("lblShippingFee");
+const lblProcessFee = document.getElementById("lblProcessFee");
+const lblNetIncome = document.getElementById("lblNetIncome");
+
 // REAL-TIME SYNCHRONIZER: Syncs Cloud data updates instantly across all views
 onSnapshot(inventoryCollection, (snapshot) => {
   masterInventory = [];
@@ -56,6 +75,9 @@ onSnapshot(inventoryCollection, (snapshot) => {
   }
   if (masterInventoryBody) {
     renderMasterTable(getCurrentDataset());
+  }
+  if (productSelect) {
+    populateProductDropdown();
   }
 });
 
@@ -434,3 +456,183 @@ document.querySelectorAll(".master-table th[data-sort]").forEach((header) => {
     renderMasterTable(getCurrentDataset());
   });
 });
+
+/* =========================================================================
+   D. MARKETPLACE PRICE CALCULATOR CONTROLLER (price-calculator.html)
+   ========================================================================= */
+function populateProductDropdown() {
+  if (!productSelect) return;
+
+  const currentSelection = productSelect.value;
+
+  productSelect.innerHTML = '<option value="">-- Choose an Item --</option>';
+  masterInventory.forEach((item) => {
+    const option = document.createElement("option");
+    option.value = item.firestoreId;
+    option.textContent = `${item.code === "-" ? "" : item.code + " - "}${item.name} (${item.color || "-"})`;
+    productSelect.appendChild(option);
+  });
+
+  if (currentSelection) {
+    productSelect.value = currentSelection;
+  }
+}
+
+if (productSelect) {
+  productSelect.addEventListener("change", function () {
+    const selectedItem = masterInventory.find(
+      (item) => item.firestoreId === this.value,
+    );
+    if (selectedItem) {
+      inputBasePrice.value =
+        selectedItem.price !== "-" ? selectedItem.price : 0;
+
+      const l =
+        selectedItem.length !== "-" ? parseFloat(selectedItem.length) : 0;
+      const w = selectedItem.width !== "-" ? parseFloat(selectedItem.width) : 0;
+      const h =
+        selectedItem.height !== "-" ? parseFloat(selectedItem.height) : 0;
+      const mass =
+        selectedItem.mass !== "-" ? parseFloat(selectedItem.mass) : 0;
+      const vol = l * w * h;
+
+      const isSmall = l < 60 && w < 60 && h < 60 && mass < 5000 && vol < 20000;
+
+      itemSpecsBadge.innerHTML = `
+        <span class="badge-info">
+          Specs: ${l}x${w}x${h} cm | ${vol.toLocaleString("id-ID")} cm³ | ${mass} g &rarr; <strong>Tier: ${isSmall ? "Small Item" : "Big Item"}</strong>
+        </span>
+      `;
+      itemSpecsBadge.dataset.tier = isSmall ? "small" : "big";
+    } else {
+      itemSpecsBadge.innerHTML = "";
+      itemSpecsBadge.dataset.tier = "";
+      inputBasePrice.value = "";
+    }
+    calculateShopeeFees();
+  });
+
+  [inputBasePrice, chkXtra, chkGratisOngkir, inputPacking, inputProfit].forEach(
+    (element) => {
+      if (element) {
+        element.addEventListener("input", calculateShopeeFees);
+        element.addEventListener("change", calculateShopeeFees);
+      }
+    },
+  );
+
+  function calculateShopeeFees() {
+    const basePrice = parseInt(inputBasePrice.value) || 0;
+    const packingCost = parseInt(inputPacking.value) || 0;
+    const profitTarget = parseInt(inputProfit.value) || 0;
+    const tier = itemSpecsBadge.dataset.tier || "small";
+
+    // Target cash value we need out of this transaction
+    const netCostBeforeFees = basePrice + packingCost + profitTarget;
+
+    if (netCostBeforeFees === 0) {
+      resetOutputs();
+      return;
+    }
+
+    // 1. Establish basic fee percentage structures
+    const adminRate = 0.095; // 9.5%
+    const xtraRate = chkXtra && chkXtra.checked ? 0.045 : 0; // 4.5%
+    const shippingRate =
+      chkGratisOngkir && chkGratisOngkir.checked
+        ? tier === "small"
+          ? 0.08
+          : 0.095
+        : 0;
+    const flatProcessFee = 1250;
+
+    const totalPercentageRates = adminRate + xtraRate + shippingRate;
+
+    // 2. Initial Reverse Calculation Estimate (Assuming caps aren't hit yet)
+    let listingPrice = Math.round(
+      (netCostBeforeFees + flatProcessFee) / (1 - totalPercentageRates),
+    );
+
+    // 3. Exact Cap-Validation Pass
+    // Because caps decrease the actual rate cut at high values, check for cap overflows
+    let adminFee = Math.round(listingPrice * adminRate);
+    let xtraFee =
+      chkXtra && chkXtra.checked
+        ? Math.min(Math.round(listingPrice * xtraRate), 60000)
+        : 0;
+
+    let shippingFee = 0;
+    if (chkGratisOngkir && chkGratisOngkir.checked) {
+      const maxShippingCap = tier === "small" ? 40000 : 60000;
+      shippingFee = Math.min(
+        Math.round(listingPrice * shippingRate),
+        maxShippingCap,
+      );
+    }
+
+    // If caps are hit, recalculate with the static capped cash values
+    const totalVariableFees = adminFee + xtraFee + shippingFee;
+    const actualCalculatedListingPrice =
+      netCostBeforeFees + totalVariableFees + flatProcessFee;
+
+    // Use optimized targeted pricing value
+    listingPrice = actualCalculatedListingPrice;
+
+    // Re-verify exact breakdown based on finalized reverse targeted price
+    adminFee = Math.round(listingPrice * adminRate);
+    if (chkXtra && chkXtra.checked)
+      xtraFee = Math.min(Math.round(listingPrice * xtraRate), 60000);
+    if (chkGratisOngkir && chkGratisOngkir.checked) {
+      const maxShippingCap = tier === "small" ? 40000 : 60000;
+      shippingFee = Math.min(
+        Math.round(listingPrice * shippingRate),
+        maxShippingCap,
+      );
+    }
+
+    // Render numbers to layout metrics
+    const documentSet = {
+      lblGrossPrice: basePrice,
+      lblPackingCost: packingCost,
+      lblProfitTarget: profitTarget,
+      lblNetCost: netCostBeforeFees,
+      lblAdminFee: adminFee,
+      lblXtraFee: xtraFee,
+      lblShippingFee: shippingFee,
+      lblProcessFee: flatProcessFee,
+      lblNetIncome: listingPrice,
+    };
+
+    Object.keys(documentSet).forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) {
+        let prefix = "Rp ";
+        if (
+          id === "lblAdminFee" ||
+          id === "lblXtraFee" ||
+          id === "lblShippingFee" ||
+          id === "lblProcessFee"
+        )
+          prefix = "+Rp ";
+        element.textContent = prefix + documentSet[id].toLocaleString("id-ID");
+      }
+    });
+  }
+
+  function resetOutputs() {
+    [
+      "lblGrossPrice",
+      "lblPackingCost",
+      "lblProfitTarget",
+      "lblNetCost",
+      "lblAdminFee",
+      "lblXtraFee",
+      "lblShippingFee",
+      "lblProcessFee",
+      "lblNetIncome",
+    ].forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) element.textContent = "Rp 0";
+    });
+  }
+}
