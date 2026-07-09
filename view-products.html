@@ -15,7 +15,7 @@
       <h1>Inventory Matrix</h1>
       <nav>
         <a href="index.html">Dashboard</a>
-        <a href="view-products.html">View Products</a>
+        <a href="view-products.html" class="active">View Products</a>
         <a href="add-products.html">Add Products</a>
         <a href="price-calculator.html">Price Calculator</a>
       </nav>
@@ -23,8 +23,14 @@
 
     <div class="inventory-container">
       <h2>Current Master Database</h2>
-      <input type="text" id="searchBox" class="search-bar"
-        placeholder="Quick filter by code, name, color, location, or brand..." />
+
+      <div class="toolbar-csv">
+        <input type="text" id="searchBox" class="search-bar"
+          placeholder="Quick filter by code, name, color, location, or brand..." />
+        <button id="btnExportCSV" class="btn-csv-export" type="button">Export CSV</button>
+        <label for="btnImportCSV" class="btn-csv-import-label">Import CSV</label>
+        <input type="file" id="btnImportCSV" accept=".csv" style="display: none;" />
+      </div>
 
       <div class="master-table-wrapper">
         <table class="master-table">
@@ -46,7 +52,7 @@
           </thead>
           <tbody id="masterInventoryBody">
             <tr>
-              <td colspan="12" style="text-align: center; padding: 20px; color: #7f8c8d">
+              <td colspan="12" class="empty-placeholder">
                 Connecting to cloud database streams...
               </td>
             </tr>

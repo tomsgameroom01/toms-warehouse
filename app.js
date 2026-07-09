@@ -115,8 +115,8 @@ if (bulkTemplateBody) {
             <td><input type="number" class="cell-mass" step="0.01" min="0" placeholder="0"></td>
             <td><input type="number" class="cell-price" step="1" min="0" placeholder="e.g. 50000"></td>
             <td><input type="number" class="cell-qty" required min="1" value="1"></td>
-            <td style="text-align: center;">
-                <button type="button" class="btn-del-row" data-rowid="${rowId}">✕</button>
+            <td class="text-center">
+                <button type="button" class="btn-del-row" data-rowid="${rowId}">X</button>
             </td>
         `;
     bulkTemplateBody.appendChild(tr);
@@ -216,7 +216,7 @@ function renderMasterTable(dataset) {
   masterInventoryBody.innerHTML = "";
 
   if (dataset.length === 0) {
-    masterInventoryBody.innerHTML = `<tr><td colspan="12" style="text-align:center; color:#7f8c8d; font-style:italic; padding: 20px;">No matching variant records found.</td></tr>`;
+    masterInventoryBody.innerHTML = `<tr><td colspan="12" class="empty-placeholder">No matching variant records found.</td></tr>`;
     return;
   }
 
@@ -266,20 +266,20 @@ function renderMasterTable(dataset) {
     if (isEditing) {
       // --- EDIT MODE LAYOUT ---
       tr.innerHTML = `
-        <td><input type="text" id="edit-code-${item.firestoreId}" value="${item.code === "-" ? "" : item.code}" style="width:100%; padding:5px; border:1px solid #cbd5e1; border-radius:4px;"></td>
-        <td><input type="text" id="edit-name-${item.firestoreId}" value="${item.name}" required style="width:100%; padding:5px; border:1px solid #cbd5e1; border-radius:4px;"></td>
-        <td><input type="text" id="edit-color-${item.firestoreId}" value="${(item.color || "-") === "-" ? "" : item.color}" style="width:100%; padding:5px; border:1px solid #cbd5e1; border-radius:4px;"></td>
-        <td><input type="text" id="edit-location-${item.firestoreId}" value="${item.location === "-" ? "" : item.location}" style="width:100%; padding:5px; border:1px solid #cbd5e1; border-radius:4px;"></td>
-        <td><input type="text" id="edit-brand-${item.firestoreId}" value="${item.brand === "-" ? "" : item.brand}" style="width:100%; padding:5px; border:1px solid #cbd5e1; border-radius:4px;"></td>
-        <td><input type="number" step="0.1" id="edit-length-${item.firestoreId}" value="${item.length !== "-" ? item.length : ""}" style="width:65px; padding:5px; border:1px solid #cbd5e1; border-radius:4px;"></td>
-        <td><input type="number" step="0.1" id="edit-width-${item.firestoreId}" value="${item.width !== "-" ? item.width : ""}" style="width:65px; padding:5px; border:1px solid #cbd5e1; border-radius:4px;"></td>
-        <td><input type="number" step="0.1" id="edit-height-${item.firestoreId}" value="${item.height !== "-" ? item.height : ""}" style="width:65px; padding:5px; border:1px solid #cbd5e1; border-radius:4px;"></td>
-        <td><input type="number" step="0.01" id="edit-mass-${item.firestoreId}" value="${item.mass !== "-" ? item.mass : ""}" style="width:65px; padding:5px; border:1px solid #cbd5e1; border-radius:4px;"></td>
-        <td><input type="number" step="1" id="edit-price-${item.firestoreId}" value="${item.price !== "-" && item.price !== undefined ? item.price : ""}" style="width:85px; padding:5px; border:1px solid #cbd5e1; border-radius:4px;"></td>
-        <td><input type="number" min="1" id="edit-qty-${item.firestoreId}" value="${item.qty}" style="width:60px; padding:5px; border:1px solid #cbd5e1; border-radius:4px;"></td>
+        <td><input type="text" id="edit-code-${item.firestoreId}" value="${item.code === "-" ? "" : item.code}" class="edit-cell-text"></td>
+        <td><input type="text" id="edit-name-${item.firestoreId}" value="${item.name}" required class="edit-cell-text"></td>
+        <td><input type="text" id="edit-color-${item.firestoreId}" value="${(item.color || "-") === "-" ? "" : item.color}" class="edit-cell-text"></td>
+        <td><input type="text" id="edit-location-${item.firestoreId}" value="${item.location === "-" ? "" : item.location}" class="edit-cell-text"></td>
+        <td><input type="text" id="edit-brand-${item.firestoreId}" value="${item.brand === "-" ? "" : item.brand}" class="edit-cell-text"></td>
+        <td><input type="number" step="0.1" id="edit-length-${item.firestoreId}" value="${item.length !== "-" ? item.length : ""}" class="edit-cell-num-sm"></td>
+        <td><input type="number" step="0.1" id="edit-width-${item.firestoreId}" value="${item.width !== "-" ? item.width : ""}" class="edit-cell-num-sm"></td>
+        <td><input type="number" step="0.1" id="edit-height-${item.firestoreId}" value="${item.height !== "-" ? item.height : ""}" class="edit-cell-num-sm"></td>
+        <td><input type="number" step="0.01" id="edit-mass-${item.firestoreId}" value="${item.mass !== "-" ? item.mass : ""}" class="edit-cell-num-sm"></td>
+        <td><input type="number" step="1" id="edit-price-${item.firestoreId}" value="${item.price !== "-" && item.price !== undefined ? item.price : ""}" class="edit-cell-num-md"></td>
+        <td><input type="number" min="1" id="edit-qty-${item.firestoreId}" value="${item.qty}" class="edit-cell-num-qty"></td>
         <td>
-            <button class="btn-save-edit" data-cloudid="${item.firestoreId}" style="background:var(--secondary-color); color:white; padding:4px 8px; margin-right:4px;">Save</button>
-            <button class="btn-cancel-edit" style="background:#7f8c8d; color:white; padding:4px 8px;">Cancel</button>
+            <button class="btn-save-edit" data-cloudid="${item.firestoreId}">Save</button>
+            <button class="btn-cancel-edit">Cancel</button>
         </td>
       `;
 
@@ -304,7 +304,7 @@ function renderMasterTable(dataset) {
       tr.innerHTML = `
         <td><strong>${item.code}</strong></td>
         <td>${item.name}</td>
-        <td><span style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:0.9rem;">${item.color || "-"}</span></td>
+        <td><span class="variant-badge">${item.color || "-"}</span></td>
         <td>${item.location}</td>
         <td>${item.brand}</td>
         <td>${item.length !== "-" ? item.length + " cm" : "-"}</td>
@@ -314,8 +314,8 @@ function renderMasterTable(dataset) {
         <td>${item.price !== "-" && item.price !== undefined ? "Rp " + item.price.toLocaleString("id-ID") : "-"}</td>
         <td><span class="qty-badge">${item.qty}</span></td>
         <td>
-            <button class="btn-edit-row" data-cloudid="${item.firestoreId}" style="background:var(--accent-color); color:white; padding:4px 8px; margin-right:4px;">Edit</button>
-            <button class="btn-del-row btn-wipe" data-cloudid="${item.firestoreId}" style="padding:4px 8px;">Delete</button>
+            <button class="btn-edit-row" data-cloudid="${item.firestoreId}">Edit</button>
+            <button class="btn-del-row btn-wipe" data-cloudid="${item.firestoreId}">Delete</button>
         </td>
       `;
 
@@ -635,4 +635,175 @@ if (productSelect) {
       if (element) element.textContent = "Rp 0";
     });
   }
+}
+
+/* =========================================================================
+   E. CSV IMPORT & EXPORT CONTROLLER (Integrates into view-products.html)
+   ========================================================================= */
+const btnExportCSV = document.getElementById("btnExportCSV");
+const btnImportCSV = document.getElementById("btnImportCSV");
+
+// 1. CSV EXPORT LOGIC
+if (btnExportCSV) {
+  btnExportCSV.addEventListener("click", () => {
+    if (masterInventory.length === 0) {
+      alert("No data records available in the database to export.");
+      return;
+    }
+
+    const headers = [
+      "code",
+      "name",
+      "color",
+      "location",
+      "brand",
+      "length",
+      "width",
+      "height",
+      "mass",
+      "price",
+      "qty",
+    ];
+    const csvRows = [headers.join(",")];
+
+    for (const item of masterInventory) {
+      const values = headers.map((header) => {
+        const val = item[header] === undefined ? "-" : item[header];
+        // Escape quotes to maintain proper CSV structure
+        const escaped = ("" + val).replace(/"/g, '""');
+        return `"${escaped}"`;
+      });
+      csvRows.push(values.join(","));
+    }
+
+    const blob = new Blob([csvRows.join("\n")], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `inventory_matrix_export_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+}
+
+// 2. CSV IMPORT LOGIC (Parses lines and validates entries safely)
+if (btnImportCSV) {
+  btnImportCSV.addEventListener("change", function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async function (progressEvent) {
+      const text = progressEvent.target.result;
+      const lines = text.split(/\r?\n/);
+      if (lines.length <= 1) {
+        alert("The chosen CSV file has no valid rows.");
+        return;
+      }
+
+      // Read standardized headers automatically
+      const headers = lines[0]
+        .split(",")
+        .map((h) => h.replace(/^"|"$/g, "").trim().toLowerCase());
+
+      let importCount = 0;
+      let duplicateCount = 0;
+
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        // Secure parsing of cells handling double quote structures
+        const columns = [];
+        let textBuffer = "";
+        let inQuotes = false;
+        for (let char of line) {
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === "," && !inQuotes) {
+            columns.push(textBuffer.trim());
+            textBuffer = "";
+          } else {
+            textBuffer += char;
+          }
+        }
+        columns.push(textBuffer.trim());
+
+        // Extract key payload data mappings
+        const rowData = {};
+        headers.forEach((header, index) => {
+          let val = columns[index] !== undefined ? columns[index] : "-";
+          if (val.startsWith('"') && val.endsWith('"')) {
+            val = val.substring(1, val.length - 1).replace(/""/g, '"');
+          }
+          rowData[header] = val;
+        });
+
+        if (!rowData.name) continue;
+
+        // Sanitize field data types
+        const item = {
+          code: rowData.code || "-",
+          name: rowData.name,
+          color: rowData.color || "-",
+          location: rowData.location || "-",
+          brand: rowData.brand || "-",
+          length:
+            rowData.length && rowData.length !== "-"
+              ? parseFloat(rowData.length)
+              : "-",
+          width:
+            rowData.width && rowData.width !== "-"
+              ? parseFloat(rowData.width)
+              : "-",
+          height:
+            rowData.height && rowData.height !== "-"
+              ? parseFloat(rowData.height)
+              : "-",
+          mass:
+            rowData.mass && rowData.mass !== "-"
+              ? parseFloat(rowData.mass)
+              : "-",
+          price:
+            rowData.price && rowData.price !== "-"
+              ? parseInt(rowData.price)
+              : "-",
+          qty: parseInt(rowData.qty) || 1,
+        };
+
+        // Enforce variation duplication checks (Code + Color matching matrix)
+        if (item.code !== "-") {
+          const isDuplicate = masterInventory.some(
+            (existing) =>
+              existing.code &&
+              existing.code.toLowerCase() === item.code.toLowerCase() &&
+              (existing.color || "-").toLowerCase() ===
+                item.color.toLowerCase(),
+          );
+          if (isDuplicate) {
+            duplicateCount++;
+            continue;
+          }
+        }
+
+        try {
+          // Commit records into Firestore live references
+          await addDoc(inventoryCollection, item);
+          importCount++;
+        } catch (err) {
+          console.error("Row import fault: ", err);
+        }
+      }
+
+      alert(
+        `CSV Processing Completed!\n\nImported: ${importCount} elements saved.\nSkipped Duplicates: ${duplicateCount} variations.`,
+      );
+      btnImportCSV.value = ""; // Clear chosen selector
+    };
+
+    reader.readAsText(file);
+  });
 }
