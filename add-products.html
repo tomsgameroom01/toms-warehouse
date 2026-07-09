@@ -1,60 +1,64 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Products (Bulk)</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" type="image/png" href="asset/icon.png" />
-  </head>
-  <body>
-    <div class="container">
-      <header>
-        <h1>Inventory Matrix</h1>
-        <nav>
-          <a href="index.html">Dashboard</a>
-          <a href="view-products.html">View Products</a>
-          <a href="add-products.html" class="active">Add Products</a>
-        </nav>
-      </header>
 
-      <div class="bulk-container">
-        <h2>Bulk Item Intake Workspace</h2>
-        <form id="bulkForm">
-          <div class="scrollbox">
-            <table class="entry-table">
-              <thead>
-                <tr>
-                  <th style="width: 10%">Code (Optional)</th>
-                  <th style="width: 13%">Name *</th>
-                  <th style="width: 8%">Color</th>
-                  <th style="width: 8%">Location</th>
-                  <th style="width: 8%">Brand</th>
-                  <th style="width: 8%">Length (cm)</th>
-                  <th style="width: 8%">Width (cm)</th>
-                  <th style="width: 8%">Height (cm)</th>
-                  <th style="width: 8%">Mass (g)</th>
-                  <th style="width: 8%">Price (Rp)</th>
-                  <th style="width: 8%">Qty *</th>
-                  <th style="width: 5%; text-align: center">Action</th>
-                </tr>
-              </thead>
-              <tbody id="bulkTemplateBody"></tbody>
-            </table>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Products (Bulk)</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="asset/icon.png" />
+</head>
 
-          <div class="action-bar">
-            <button type="button" id="btnAddRow" class="btn-add-row">
-              + Add Row
-            </button>
-            <button type="submit" class="btn-save-all">
-              Save All Items to Cloud
-            </button>
-          </div>
-        </form>
-      </div>
+<body>
+  <div class="container">
+    <header>
+      <h1>Inventory Matrix</h1>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="view-products.html">View Products</a>
+        <a href="add-products.html">Add Products</a>
+        <a href="price-calculator.html">Price Calculator</a>
+      </nav>
+    </header>
+
+    <div class="bulk-container">
+      <h2>Bulk Item Intake Workspace</h2>
+      <form id="bulkForm">
+        <div class="scrollbox">
+          <table class="entry-table">
+            <thead>
+              <tr>
+                <th style="width: 10%">Code (Optional)</th>
+                <th style="width: 13%">Name *</th>
+                <th style="width: 8%">Color</th>
+                <th style="width: 8%">Location</th>
+                <th style="width: 8%">Brand</th>
+                <th style="width: 8%">Length (cm)</th>
+                <th style="width: 8%">Width (cm)</th>
+                <th style="width: 8%">Height (cm)</th>
+                <th style="width: 8%">Mass (g)</th>
+                <th style="width: 8%">Price (Rp)</th>
+                <th style="width: 8%">Qty *</th>
+                <th style="width: 5%; text-align: center">Action</th>
+              </tr>
+            </thead>
+            <tbody id="bulkTemplateBody"></tbody>
+          </table>
+        </div>
+
+        <div class="action-bar">
+          <button type="button" id="btnAddRow" class="btn-add-row">
+            + Add Row
+          </button>
+          <button type="submit" class="btn-save-all">
+            Save All Items to Cloud
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 
-    <script type="module" src="app.js"></script>
-  </body>
+  <script type="module" src="app.js"></script>
+</body>
+
 </html>

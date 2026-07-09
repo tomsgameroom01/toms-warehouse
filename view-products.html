@@ -1,65 +1,62 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>View Products</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="icon" type="image/png" href="asset/icon.png" />
-  </head>
-  <body>
-    <div class="container">
-      <header>
-        <h1>Inventory Matrix</h1>
-        <nav>
-          <a href="index.html">Dashboard</a>
-          <a href="view-products.html" class="active">View Products</a>
-          <a href="add-products.html">Add Products</a>
-        </nav>
-      </header>
 
-      <div class="inventory-container">
-        <h2>Current Master Database</h2>
-        <input
-          type="text"
-          id="searchBox"
-          class="search-bar"
-          placeholder="Quick filter by code, name, color, location, or brand..."
-        />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>View Products</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="asset/icon.png" />
+</head>
 
-        <div class="master-table-wrapper">
-          <table class="master-table">
-            <thead>
-              <tr style="cursor: pointer; user-select: none">
-                <th data-sort="code">Code</th>
-                <th data-sort="name">Name</th>
-                <th data-sort="color">Color</th>
-                <th data-sort="location">Location</th>
-                <th data-sort="brand">Brand</th>
-                <th data-sort="length">Length</th>
-                <th data-sort="width">Width</th>
-                <th data-sort="height">Height</th>
-                <th data-sort="mass">Mass</th>
-                <th data-sort="price">Retail Price</th>
-                <th data-sort="qty">Qty</th>
-                <th style="cursor: default">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="masterInventoryBody">
-              <tr>
-                <td
-                  colspan="12"
-                  style="text-align: center; padding: 20px; color: #7f8c8d"
-                >
-                  Connecting to cloud database streams...
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+<body>
+  <div class="container">
+    <header>
+      <h1>Inventory Matrix</h1>
+      <nav>
+        <a href="index.html">Dashboard</a>
+        <a href="view-products.html">View Products</a>
+        <a href="add-products.html">Add Products</a>
+        <a href="price-calculator.html">Price Calculator</a>
+      </nav>
+    </header>
+
+    <div class="inventory-container">
+      <h2>Current Master Database</h2>
+      <input type="text" id="searchBox" class="search-bar"
+        placeholder="Quick filter by code, name, color, location, or brand..." />
+
+      <div class="master-table-wrapper">
+        <table class="master-table">
+          <thead>
+            <tr style="cursor: pointer; user-select: none">
+              <th data-sort="code">Code</th>
+              <th data-sort="name">Name</th>
+              <th data-sort="color">Color</th>
+              <th data-sort="location">Location</th>
+              <th data-sort="brand">Brand</th>
+              <th data-sort="length">Length</th>
+              <th data-sort="width">Width</th>
+              <th data-sort="height">Height</th>
+              <th data-sort="mass">Mass</th>
+              <th data-sort="price">Retail Price</th>
+              <th data-sort="qty">Qty</th>
+              <th style="cursor: default">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="masterInventoryBody">
+            <tr>
+              <td colspan="12" style="text-align: center; padding: 20px; color: #7f8c8d">
+                Connecting to cloud database streams...
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
+  </div>
 
-    <script type="module" src="app.js"></script>
-  </body>
+  <script type="module" src="app.js"></script>
+</body>
+
 </html>
