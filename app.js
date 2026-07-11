@@ -49,6 +49,7 @@ const itemSpecsBadge = document.getElementById("itemSpecsBadge");
 const chkXtra = document.getElementById("chkXtra");
 const chkGratisOngkir = document.getElementById("chkGratisOngkir");
 const inputPacking = document.getElementById("inputPacking");
+const selectProfitType = document.getElementById("selectProfitType");
 const inputProfit = document.getElementById("inputProfit");
 
 const lblGrossPrice = document.getElementById("lblGrossPrice");
@@ -512,20 +513,32 @@ if (productSelect) {
     calculateShopeeFees();
   });
 
-  [inputBasePrice, chkXtra, chkGratisOngkir, inputPacking, inputProfit].forEach(
-    (element) => {
-      if (element) {
-        element.addEventListener("input", calculateShopeeFees);
-        element.addEventListener("change", calculateShopeeFees);
-      }
-    },
-  );
+  [
+    inputBasePrice,
+    chkXtra,
+    chkGratisOngkir,
+    inputPacking,
+    inputProfit,
+    selectProfitType,
+  ].forEach((element) => {
+    if (element) {
+      element.addEventListener("input", calculateShopeeFees);
+      element.addEventListener("change", calculateShopeeFees);
+    }
+  });
 
   function calculateShopeeFees() {
     const basePrice = parseInt(inputBasePrice.value) || 0;
     const packingCost = parseInt(inputPacking.value) || 0;
-    const profitTarget = parseInt(inputProfit.value) || 0;
     const tier = itemSpecsBadge.dataset.tier || "small";
+
+    // Handle profit configuration based on the currency format selector
+    const profitInput = parseFloat(inputProfit.value) || 0;
+    const profitType = selectProfitType ? selectProfitType.value : "rp";
+    const profitTarget =
+      profitType === "percent"
+        ? Math.round(basePrice * (profitInput / 100))
+        : Math.round(profitInput);
 
     // Target cash value we need out of this transaction
     const netCostBeforeFees = basePrice + packingCost + profitTarget;

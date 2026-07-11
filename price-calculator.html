@@ -1,130 +1,177 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Price Calculator</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="asset/icon.png" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Price Calculator</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/png" href="asset/icon.png" />
-</head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Inventory Matrix</h1>
+        <nav>
+          <a href="index.html">Dashboard</a>
+          <a href="view-products.html">View Products</a>
+          <a href="add-products.html">Add Products</a>
+          <a href="price-calculator.html" class="active">Price Calculator</a>
+        </nav>
+      </header>
 
-<body>
-  <div class="container">
-    <header>
-      <h1>Inventory Matrix</h1>
-      <nav>
-        <a href="index.html">Dashboard</a>
-        <a href="view-products.html">View Products</a>
-        <a href="add-products.html">Add Products</a>
-        <a href="price-calculator.html" class="active">Price Calculator</a>
-      </nav>
-    </header>
+      <h2>Platform Markup Calculator</h2>
 
-    <h2>Platform Markup Calculator</h2>
+      <div class="calculator-grid">
+        <div class="calc-card">
+          <h3>Cost Configuration</h3>
+          <hr class="calc-divider-light" />
 
-    <div class="calculator-grid">
-      <div class="calc-card">
-        <h3>Cost Configuration</h3>
-        <hr class="calc-divider-light" />
+          <div class="form-group">
+            <label for="platformSelect">Target E-Commerce Platform</label>
+            <select id="platformSelect" class="form-control">
+              <option value="shopee">Shopee</option>
+              <option value="tokopedia" disabled>
+                Tokopedia (Coming Soon)
+              </option>
+              <option value="lazada" disabled>Lazada (Coming Soon)</option>
+              <option value="blibli" disabled>Blibli (Coming Soon)</option>
+              <option value="toco" disabled>Toco (Coming Soon)</option>
+            </select>
+          </div>
 
-        <div class="form-group">
-          <label for="platformSelect">Target E-Commerce Platform</label>
-          <select id="platformSelect" class="form-control">
-            <option value="shopee">Shopee</option>
-            <option value="tokopedia" disabled>Tokopedia (Coming Soon)</option>
-            <option value="lazada" disabled>Lazada (Coming Soon)</option>
-            <option value="blibli" disabled>Blibli (Coming Soon)</option>
-            <option value="toco" disabled>Toco (Coming Soon)</option>
-          </select>
-        </div>
+          <div class="form-group">
+            <label for="productSelect">Select Base Product</label>
+            <select id="productSelect" class="form-control">
+              <option value="">-- Loading products from cloud... --</option>
+            </select>
+            <div id="itemSpecsBadge"></div>
+          </div>
 
-        <div class="form-group">
-          <label for="productSelect">Select Base Product</label>
-          <select id="productSelect" class="form-control">
-            <option value="">-- Loading products from cloud... --</option>
-          </select>
-          <div id="itemSpecsBadge"></div>
-        </div>
+          <div class="form-group">
+            <label for="inputBasePrice"
+              >Product Retail / Capital Price (Rp)</label
+            >
+            <input
+              type="number"
+              id="inputBasePrice"
+              class="form-control"
+              placeholder="Pulled from product retail price"
+            />
+          </div>
 
-        <div class="form-group">
-          <label for="inputBasePrice">Product Retail / Capital Price (Rp)</label>
-          <input type="number" id="inputBasePrice" class="form-control"
-            placeholder="Pulled from product retail price" />
-        </div>
+          <div id="shopeeOptions">
+            <label class="bold-text">Shopee Programs Joined</label>
+            <div class="checkbox-group">
+              <label
+                ><input type="checkbox" id="chkXtra" checked /> Cashback XTRA
+                (+4.5%)</label
+              >
+              <br /><br />
+              <label
+                ><input type="checkbox" id="chkGratisOngkir" checked /> Gratis
+                Ongkir XTRA</label
+              >
+            </div>
+          </div>
 
-        <div id="shopeeOptions">
-          <label class="bold-text">Shopee Programs Joined</label>
-          <div class="checkbox-group">
-            <label><input type="checkbox" id="chkXtra" checked /> Cashback XTRA (+4.5%)</label>
-            <br /><br />
-            <label><input type="checkbox" id="chkGratisOngkir" checked /> Gratis Ongkir XTRA</label>
+          <div class="form-group" style="margin-top: 20px">
+            <label for="inputPacking">Packing Cost Addition (Rp)</label>
+            <input
+              type="number"
+              id="inputPacking"
+              class="form-control"
+              value="0"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="inputProfit">Desired Extra Profit Margin</label>
+            <div style="display: flex; gap: 10px">
+              <select
+                id="selectProfitType"
+                class="form-control"
+                style="width: 35%"
+              >
+                <option value="rp">Rp</option>
+                <option value="percent">%</option>
+              </select>
+              <input
+                type="number"
+                id="inputProfit"
+                class="form-control"
+                value="0"
+                style="width: 65%"
+              />
+            </div>
           </div>
         </div>
 
-        <div class="form-group" style="margin-top: 20px">
-          <label for="inputPacking">Packing Cost Addition (Rp)</label>
-          <input type="number" id="inputPacking" class="form-control" value="0" />
+        <div class="calc-card calc-card-output">
+          <h3>Required Target Price</h3>
+          <hr class="calc-divider-dark" />
+
+          <table class="breakdown-table">
+            <tbody>
+              <tr>
+                <td>Product Base Retail Price</td>
+                <td class="text-right" id="lblGrossPrice">Rp 0</td>
+              </tr>
+              <tr>
+                <td>Packing Cost</td>
+                <td class="text-right" id="lblPackingCost">Rp 0</td>
+              </tr>
+              <tr>
+                <td>Extra Profit Margin</td>
+                <td class="text-right" id="lblProfitTarget">Rp 0</td>
+              </tr>
+              <tr class="dashed-row">
+                <td class="bold-text">Net Cost Before Fees</td>
+                <td class="text-right bold-text" id="lblNetCost">Rp 0</td>
+              </tr>
+              <tr>
+                <td>Biaya Administrasi (9.5% of list)</td>
+                <td class="text-right text-danger" id="lblAdminFee">+Rp 0</td>
+              </tr>
+              <tr>
+                <td>Biaya Layanan XTRA (4.5% of list)</td>
+                <td class="text-right text-danger" id="lblXtraFee">+Rp 0</td>
+              </tr>
+              <tr>
+                <td>Biaya Layanan Gratis Ongkir XTRA</td>
+                <td class="text-right text-danger" id="lblShippingFee">
+                  +Rp 0
+                </td>
+              </tr>
+              <tr>
+                <td>Biaya Proses Pesanan (Flat)</td>
+                <td class="text-right text-danger" id="lblProcessFee">+Rp 0</td>
+              </tr>
+              <tr class="total-row">
+                <td style="color: var(--secondary-color)">
+                  Recommended Listing Price
+                </td>
+                <td
+                  class="text-right"
+                  style="color: var(--secondary-color)"
+                  id="lblNetIncome"
+                >
+                  Rp 0
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="calc-note">
+            *
+            <em
+              >Note: Percentage calculations automatically adjust for Shopee's
+              maximum fee limits (caps) per item.</em
+            >
+          </p>
         </div>
-
-        <div class="form-group">
-          <label for="inputProfit">Desired Extra Profit Margin (Rp)</label>
-          <input type="number" id="inputProfit" class="form-control" value="0" />
-        </div>
-      </div>
-
-      <div class="calc-card calc-card-output">
-        <h3>Required Target Price</h3>
-        <hr class="calc-divider-dark" />
-
-        <table class="breakdown-table">
-          <tbody>
-            <tr>
-              <td>Product Base Retail Price</td>
-              <td class="text-right" id="lblGrossPrice">Rp 0</td>
-            </tr>
-            <tr>
-              <td>Packing Cost</td>
-              <td class="text-right" id="lblPackingCost">Rp 0</td>
-            </tr>
-            <tr>
-              <td>Extra Profit Margin</td>
-              <td class="text-right" id="lblProfitTarget">Rp 0</td>
-            </tr>
-            <tr class="dashed-row">
-              <td class="bold-text">Net Cost Before Fees</td>
-              <td class="text-right bold-text" id="lblNetCost">Rp 0</td>
-            </tr>
-            <tr>
-              <td>Biaya Administrasi (9.5% of list)</td>
-              <td class="text-right text-danger" id="lblAdminFee">+Rp 0</td>
-            </tr>
-            <tr>
-              <td>Biaya Layanan XTRA (4.5% of list)</td>
-              <td class="text-right text-danger" id="lblXtraFee">+Rp 0</td>
-            </tr>
-            <tr>
-              <td>Biaya Layanan Gratis Ongkir XTRA</td>
-              <td class="text-right text-danger" id="lblShippingFee">+Rp 0</td>
-            </tr>
-            <tr>
-              <td>Biaya Proses Pesanan (Flat)</td>
-              <td class="text-right text-danger" id="lblProcessFee">+Rp 0</td>
-            </tr>
-            <tr class="total-row">
-              <td style="color: var(--secondary-color)">Recommended Listing Price</td>
-              <td class="text-right" style="color: var(--secondary-color)" id="lblNetIncome">Rp 0</td>
-            </tr>
-          </tbody>
-        </table>
-        <p class="calc-note">
-          * <em>Note: Percentage calculations automatically adjust for Shopee's maximum fee limits (caps) per item.</em>
-        </p>
       </div>
     </div>
-  </div>
 
-  <script type="module" src="app.js"></script>
-</body>
-
+    <script type="module" src="app.js"></script>
+  </body>
 </html>
